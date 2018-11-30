@@ -7,6 +7,6 @@
     <author email="xomoliapplication@outlook.com" href="http://phonegap.com">
         Xomoli
     </author>
-    <content src="inicio.html" />
+    <content src="www/inicio.html" />
     <access origin="*" />
 </widget>
