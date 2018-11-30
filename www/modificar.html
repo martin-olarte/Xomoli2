@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<ons-page align="center">
+
+	  <div style="text-align: center;">
+		  <h1>Modificar Perfil</h1>
+		<p>
+		  Carga tu nueva fotografía
+		</p>
+			
+    			<input name="file" type="file" accept="image/*"> 
+  		  		<input name="submit" type="submit" value="Cargar imagen">  
+			
+		<p>
+		  <ons-button onclick="hidePopover()">Cerrar</ons-button>
+		</p>
+	  </div>
+<form action="http://xomoliapplication.000webhostapp.com/carga.php" method="post" enctype="multipart/form-data"> </form>
+	</ons-page>
+</body>
+</html>

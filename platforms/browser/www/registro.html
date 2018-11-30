@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+	
+</head>
+<body>
+	<ons-page align="center">
+		<ons-toolbar>
+			<div class="center">Xomoli App</div>
+		</ons-toolbar>
+		<img src="recursos/xomoli_logo.png" width="50px" style="margin-top:20px">
+		<h2>Registro Xomoli</h2>
+		<p>Rellena los campos siguientes con tus datos.</p>
+		<p style="overflow: hidden;">
+			<ons-input id="usuario" modifier="underbar" placeholder="Usuario" float onblur="verifica(id)"></ons-input>
+			<img id="estado_usuario" src="recursos/correcto.png" width="33px" style="visibility: hidden;">
+		</p>
+		<p>
+			<ons-input id="nombre" modifier="underbar" placeholder="Nombre" float onblur="verifica(id)"></ons-input>
+			<img id="estado_nombre" src="recursos/correcto.png" width="33px" style="visibility: hidden;">
+		</p>
+		<p>
+			<ons-input type="email "id="correo" modifier="underbar" placeholder="Dirección de correo" float onblur="verifica(id)"></ons-input>
+			<img id="estado_email" src="recursos/correcto.png" width="33px" style="visibility: hidden;">
+		</p>
+		<p>
+			<ons-input type="password" id="pass" modifier="underbar" placeholder="Contraseña" float onblur="verifica(id)"></ons-input>
+			<img id="estado_pass" src="recursos/correcto.png" width="33px" style="visibility: hidden;">
+		</p>
+		<p>
+			<ons-button onclick="registrar()">¡Registrar!</ons-button>
+			<p><ons-progress-circular indeterminate id="cargando" style="visibility:hidden;"></ons-progress-circular></p>
+		</p>
+		<p>
+			<ons-button modifier="quiet" onclick="volver()">Volver a la página anterior</ons-button>
+		</p>
+	</ons-page>
+	
+	<ons-alert-dialog id="error-dialog">
+		<div class="alert-dialog-title">Error al registrarte</div>
+		<div class="alert-dialog-content">
+			Verifique tus datos y la conexión a internet.
+		</div>
+		<div class="alert-dialog-footer">
+			<ons-alert-dialog-button onclick="continuar()">Cerrar</ons-alert-dialog-button>
+		</div>
+	</ons-alert-dialog>
+	<ons-alert-dialog id="exito-dialog">
+		<div class="alert-dialog-title">¡Genial!</div>
+		<div class="alert-dialog-content">
+			Tu registro a Xomoli se ha realizado con éxito. <br> Ahora puedes iniciar sesión.
+		</div>
+		<div class="alert-dialog-footer">
+			<ons-alert-dialog-button onclick="volver()">Continuar</ons-alert-dialog-button>
+		</div>
+	</ons-alert-dialog>
+
+</body>
+
+<script>
+	var volver = function(){
+		location.href ="login.html";
+	}
+	var verifica = function(id){
+		var dato = document.getElementById(id).value;
+		if (id == "usuario" || id == "correo"){
+			var campo = id;
+			var params = "solicitud=Valida&campo="+campo+"&dato="+dato;
+			var url = "http://xomoliapplication.000webhostapp.com/aplicacion.php";
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					if(this.responseText=="1"){
+						if (id == "usuario"){
+							var expreg = /^([A-Za-z]{1}[0-9]*)+$/;
+							if(expreg.test(dato)){
+								document.getElementById('estado_usuario').src='recursos/correcto.png';	
+								document.getElementById('estado_usuario').checked = true;				
+								document.getElementById('estado_usuario').style.visibility='visible';
+							}
+							else{
+								document.getElementById('estado_usuario').src='recursos/incorrecto.png';
+								document.getElementById('estado_usuario').checked = false;		
+								document.getElementById('estado_usuario').style.visibility='visible';	
+							}
+						}
+						if (id == "correo"){
+							var expreg = /^[\w]+@{1}[\w]+\.[a-z]{2,3}$/;
+							if(expreg.test(dato)){
+								document.getElementById('estado_email').src='recursos/correcto.png';	
+								document.getElementById('estado_email').checked = true;	
+								document.getElementById('estado_email').style.visibility='visible';
+							}
+							else{
+								document.getElementById('estado_email').src='recursos/incorrecto.png';
+								document.getElementById('estado_email').checked = false;	
+								document.getElementById('estado_email').style.visibility='visible';
+							}
+						}	
+					}
+					else{
+						if (id == "usuario"){			
+							document.getElementById('estado_usuario').src='recursos/incorrecto.png';	
+							document.getElementById('estado_usuario').checked = false;		
+							document.getElementById('estado_usuario').style.visibility='visible';
+						}
+						if (id == "correo"){
+							document.getElementById('estado_email').src='recursos/incorrecto.png';
+							document.getElementById('estado_email').checked = false;	
+							document.getElementById('estado_email').style.visibility='visible';
+						}	
+						
+					}
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);	
+		}
+		
+		if (id == "nombre"){
+			var expreg = /^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/;
+				if(expreg.test(dato)){
+					document.getElementById('estado_nombre').src='recursos/correcto.png';
+					document.getElementById('estado_nombre').checked = true;	
+					document.getElementById('estado_nombre').style.visibility='visible';
+				}
+				else{
+					document.getElementById('estado_nombre').src='recursos/incorrecto.png';	
+					document.getElementById('estado_nombre').checked = false;		
+					document.getElementById('estado_nombre').style.visibility='visible';
+				}
+		}
+
+		if (id == "pass"){
+			if(dato.length>=4){
+				document.getElementById('estado_pass').src='recursos/correcto.png';
+				document.getElementById('estado_pass').checked = true;	
+				document.getElementById('estado_pass').style.visibility='visible';
+			}
+			else{
+				document.getElementById('estado_pass').src='recursos/incorrecto.png';	
+				document.getElementById('estado_pass').checked = false;		
+				document.getElementById('estado_pass').style.visibility='visible';
+			}
+		}	
+	}
+	
+	var registrar = function(){
+		var estados = [document.getElementById('estado_usuario').checked, document.getElementById('estado_nombre').checked, document.getElementById('estado_email').checked, document.getElementById('estado_pass').checked];
+		
+		if(estados[0] == true && estados[1] == true && estados[2] == true && estados[3] == true){
+			document.getElementById('cargando').style.visibility='visible';
+			var usuario = document.getElementById('usuario').value;
+			var nombre = document.getElementById('nombre').value;
+			var correo = document.getElementById('correo').value;
+			var pass = document.getElementById('pass').value;
+			var params = "solicitud=Registro&usuario="+usuario+"&nombre="+nombre+"&correo="+correo+"&pass="+pass;
+			var url = "http://xomoliapplication.000webhostapp.com/aplicacion.php";
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					document.getElementById('cargando').style.visibility='hidden';
+					if(this.responseText=="1"){
+						document.getElementById('exito-dialog').show();
+						}
+					else{
+						document.getElementById('error-dialog').show();
+						}
+					}
+				};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);		
+		}
+		else{
+			document.getElementById('error-dialog').show();
+		}
+	}
+	
+	var continuar = function(){
+				document.getElementById('error-dialog').hide();
+	}
+	
+
+</script>
+</html>

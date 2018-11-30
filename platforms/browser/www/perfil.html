@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+	<meta charset="UTF-8">
+
+	<script>
+		var cargarPerfil = function(){
+			var perfil = localStorage.getItem("Sesion");
+			var params="solicitud=Perfil&Id="+perfil;
+			var url = "http://xomoliapplication.000webhostapp.com/aplicacion.php";
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					var respuesta = this.response;
+					doc = new DOMParser().parseFromString(respuesta, "text/html");
+					document.getElementById("nombre").innerHTML = doc.getElementById("nombre").innerHTML;
+					document.getElementById("usuario").innerHTML = doc.getElementById("usuario").innerHTML;
+					document.getElementById("correo").innerHTML = doc.getElementById("correo").innerHTML;	
+					document.getElementById("foto").innerHTML = doc.getElementById("foto").innerHTML;
+					document.getElementById("identificador").innerHTML = doc.getElementById("identificador").innerHTML;
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);
+		};
+	</script>
+	
+</head>
+<body onload="cargarPerfil()">
+	<ons-page align="center">
+		<br>
+		<div id="foto"><img src="recursos/perfil.png" style="width:250px;height:250px;border-radius:150px;background-position:center;background-size:cover;"></div>
+		<ons-card style="border-radius: 25px;">
+				<div class="content">Nombre</div>
+				<div id="nombre" class="title"><ons-icon icon="md-account"></ons-icon>&nbsp;</div>
+				<div class="content">Usuario</div>
+				<h4 id="usuario"><ons-icon icon="md-account-box"></ons-icon>&nbsp;</h4>
+				<div class="content">Correo electrónico</div>
+				<h4 id="correo"><ons-icon icon="md-email"></ons-icon>&nbsp;</h4>
+		</ons-card>
+		<p id="result"></p>
+		<h3>Modificar foto de perfil</h3>
+		<form action="http://xomoliapplication.000webhostapp.com/carga.php" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="startUpload();">
+			<input name="file" type="file">
+			<div id="identificador"><input name="identificador" value="0" hidden></div>
+			 <input type="submit" name="submitBtn" value="Cambiar Foto" />
+		</form>
+		<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;"></iframe>   
+</ons-page>
+</body>
+<script>
+	function startUpload(){
+		cargarPerfil();
+    	return true;
+	};
+	
+	function stopUpload(success){
+      if (success == 1){
+         cargarPerfil()
+      }
+      return true;   
+	};
+</script>
+</html>

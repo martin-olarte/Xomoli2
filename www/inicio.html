@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script>
+		var compruebaSesion = function(){
+			if (localStorage.getItem("Sesion") == null){
+				location.href ="login.html";
+			}
+		}
+		compruebaSesion();
+	</script>
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+	<meta charset="UTF-8">
+</head>
+<body>
+	<ons-page align="center">
+		<ons-splitter>
+			<ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+				<ons-page>
+					<ons-list>
+						<ons-list-item onclick="fn.load('inicio.html')" tappable>
+							Inicio
+						</ons-list-item>
+						<ons-list-item onclick="fn.load('nuevolibro.html')" tappable>
+							Registra Libro
+						</ons-list-item>
+						<ons-list-item onclick="fn.load('mapa.html')" tappable>
+							Descubre cerca
+						</ons-list-item>
+						<ons-list-item onclick="cerrarSesion()" tappable>
+							Cerrar sesión
+						</ons-list-item>
+					</ons-list>
+				</ons-page>
+			</ons-splitter-side>
+			<ons-splitter-content id="content" page="inicio.html">
+
+			
+			</ons-splitter-content>
+		</ons-splitter>
+	</ons-page>
+	
+	<template id="inicio.html">
+		<ons-page>
+			<ons-toolbar>
+				<div class="left">
+					<ons-toolbar-button onclick="fn.open()">
+						<ons-icon icon="md-menu"></ons-icon>
+					</ons-toolbar-button>
+				</div>
+				<div class="center">
+					Xomoli App
+				</div>
+			</ons-toolbar>
+				<ons-page>
+				<ons-tabbar swipeable position="bottom">
+					<ons-tab page="principal.html" label="Inicio" icon="ion-home, material:md-home" active>
+					</ons-tab>
+					<ons-tab page="favoritos.html" label="Favoritos" icon="md-favorite" active-icon="md-favorite">
+					</ons-tab>
+					<ons-tab page="perfil.html" label="Perfil" icon="md-face" active-icon="md-face">
+					</ons-tab>
+				</ons-tabbar>
+				</ons-page>
+				<template id="principal.html">
+					<ons-page id="Inicio">
+						<object type="text/html" data="principal.html" width=100% height=100%></object>
+					</ons-page>
+				</template>
+				<template id="favoritos.html">
+					<ons-page id="Favoritos">
+						<object type="text/html" data="favoritos.html" width=100% height=100%></object>
+					</ons-page>
+				</template>
+				<template id="perfil.html">
+					<ons-page id="Perfil">
+						<object type="text/html" data="perfil.html" width=100% height=100%></object>
+					</ons-page>
+				</template>	
+		</ons-page>
+	</template>
+	
+	<template id="nuevolibro.html">
+		<ons-page>
+			<ons-toolbar>
+				<div class="left">
+					<ons-toolbar-button onclick="fn.open()">
+						<ons-icon icon="md-menu"></ons-icon>
+					</ons-toolbar-button>
+				</div>
+				<div class="center">
+					Xomoli App
+				</div>
+			</ons-toolbar>
+			<ons-page>
+				<ons-card>				
+					<div class="title">
+					  Registro de Nuevo Libro
+					</div>
+					<div align="center" class="content" style="padding: 15px;">						
+						<p>
+						<ons-input id="nLibro" style="margin: 10px;" placeholder="Nombre del Libro" input-id="Name" float modifier="material underbar"></ons-input>								
+						</p>					
+						<p>
+						<ons-input id="nAutor" style="margin: 10px;"  placeholder="Autor" input-id="Author" float modifier="material underbar"></ons-input>
+						</p>
+						<p>							
+						<ons-input id="nEditorial" style="margin: 10px;"  placeholder="Editorial" input-id="Publisher" float modifier="material underbar"></ons-input>		
+						</p>
+						<p><ons-button style="margin: 10px;" onclick="registrarlibro()">Guardar Libro</ons-button></p>												
+						<p><ons-progress-circular indeterminate id="cargando" style="visibility:hidden;"></ons-progress-circular></p>
+					</div>
+				  </ons-card>
+			</ons-page>
+		</ons-page>
+	</template>
+	<template id="mapa.html">
+		<ons-page>
+			<ons-toolbar>
+				<div class="left">
+					<ons-toolbar-button onclick="fn.open()">
+						<ons-icon icon="md-menu"></ons-icon>
+					</ons-toolbar-button>
+				</div>
+				<div class="center">
+					Descubre cerca
+				</div>
+			</ons-toolbar>
+			<object type="text/html" data="mapa.html" width=100% height=100%></object>
+		</ons-page>
+	</template>
+	<template id="cerrar.html">
+		<ons-page>
+			<ons-toolbar>
+				<div class="left">
+					<ons-toolbar-button onclick="fn.open()">
+						<ons-icon icon="md-menu"></ons-icon>
+					</ons-toolbar-button>
+				</div>
+				<div class="center">
+					Cerrar sesión
+				</div>
+			</ons-toolbar>
+		</ons-page>
+	</template>
+</body>
+	<script>
+		window.fn = {};
+		
+		window.fn.open = function() {
+		  var menu = document.getElementById('menu');
+		  menu.open();
+		};
+		
+		window.fn.load = function(page) {
+		  var content = document.getElementById('content');
+		  var menu = document.getElementById('menu');
+		  content.load(page)
+			.then(menu.close.bind(menu));
+		};
+		
+		var cerrarSesion = function(){
+				localStorage.clear()
+				location.href ="login.html";
+		};
+
+		var registrarlibro = function(){
+			document.getElementById('cargando').style.visibility='visible';
+			var nombreL = document.getElementById('nLibro').value;
+			var nombreA = document.getElementById('nAutor').value;
+			var nombreE = document.getElementById('nEditorial').value;		
+
+			if(nombreA==""||nombreE==""||nombreL=="")
+			{
+				ons.notification.toast('Debe llenar todos los campos', { timeout: 1000, animation: 'ascend' })
+				return;
+			}
+
+			var params="solicitud=Libro&nombre="+nombreL+"&autor="+nombreA+"&editorial="+nombreE;
+			var url = "http://xomoliapplication.000webhostapp.com/Content.php";	
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					document.getElementById('cargando').style.visibility='hidden';
+					if(this.responseText=="1")
+					{						
+						ons.notification.toast('Se registro el libro correctamente', { timeout: 1000, animation: 'ascend' })
+						document.getElementById('nLibro').value='';
+						document.getElementById('nAutor').value='';
+						document.getElementById('nEditorial').value='';		
+					}else{
+						ons.notification.toast('Error al guardar', { timeout: 1000, animation: 'ascend' })
+					}
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);	
+		}
+	</script>
+</html>

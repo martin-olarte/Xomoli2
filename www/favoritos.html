@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+    <meta charset="UTF-8">
+    <script>
+        var loadFavs = function(){
+            var usuario = localStorage.getItem("Sesion");
+			var params="solicitud=Favoritos&ID_U="+usuario;
+			var url = "http://xomoliapplication.000webhostapp.com/Content.php";
+			
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					document.getElementById("space").innerHTML = this.responseText;
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);
+		};
+    </script>
+</head>
+<body onload="loadFavs();">
+        <ons-page align="center">
+            <h1>Mis libros Favoritos</h1>
+            <div id="space">
+                
+            </div>                                 
+        </ons-page>
+</body>
+</html>
+
+
+

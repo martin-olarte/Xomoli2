@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+	<meta charset="UTF-8">
+	<script>
+		var loadComments = function(){
+			var params="solicitud=Principal";
+			var url = "http://xomoliapplication.000webhostapp.com/Content.php";
+			
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					document.getElementById("space").innerHTML = this.responseText;
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);
+		};
+		var showPopover = function(target,idlibro) {
+			localStorage.setItem("ID_P",idlibro);
+			document
+				.getElementById('popover')
+				.show(target);
+			};
+
+		var hidePopover = function() {
+			document.getElementById('new_comment').value='';
+			localStorage.removeItem("ID_P");
+			document
+				.getElementById('popover')
+				.hide();
+			loadComments();
+			};
+		var saveComment = function(){
+			document.getElementById('cargando').style.visibility='visible';
+			var comentario = document.getElementById('new_comment').value;
+
+			if(comentario=="")
+			{
+				ons.notification.toast('Debe ingresar algun texto', { timeout: 1000, animation: 'ascend' })
+				document.getElementById('cargando').style.visibility='hidden';
+				return;
+			}
+			var usuario = localStorage.getItem("Sesion");
+			var idlibro = localStorage.getItem("ID_P");
+							
+			var params="solicitud=Comentario&ID_U="+usuario+"&ID_L="+idlibro+"&comentario="+comentario;
+			var url = "http://xomoliapplication.000webhostapp.com/Content.php";	
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					document.getElementById('cargando').style.visibility='hidden';
+					if(this.responseText=="1")
+					{						
+						ons.notification.toast('Se guardo comentario', { timeout: 1000, animation: 'ascend' })
+					}else{
+						ons.notification.toast('Error al guardar', { timeout: 1000, animation: 'ascend' })
+					}
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);	
+		}
+		var saveFavorite = function(ID_P){
+			var usuario = localStorage.getItem("Sesion");
+			var params="solicitud=Favorito&ID_U="+usuario+"&ID_L="+ID_P;
+			var url = "http://xomoliapplication.000webhostapp.com/Content.php";
+			
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					if(this.responseText=="0")
+					{
+						ons.notification.toast('Error agregando a favoritos', { timeout: 1000, animation: 'ascend' })
+					}else if(this.responseText=="-1")
+					{
+						ons.notification.toast('Este libro ya esta en favoritos', { timeout: 1000, animation: 'ascend' })
+					}else
+					{
+						ons.notification.toast('Agregado a favoritos', { timeout: 1000, animation: 'ascend' })
+					}
+				}
+			};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);
+		};
+
+		var showTemplateDialog = function() {
+			var dialog = document.getElementById('my-dialog');
+
+			if (dialog) {
+				dialog.show();
+			} else {
+				ons.createElement('dialog.html', { append: true })
+				.then(function(dialog) {
+					dialog.show();
+				});
+			}
+		};
+		var continuar = function(id){
+				document.getElementById(id).hide();
+		}
+	</script>
+</head>
+<body onload="loadComments()">
+	<ons-page align="center">
+		<h1>Últimas publicaciones</h1>
+		<div id="space">
+			
+		</div>
+ 		
+		
+	</ons-page>
+	<ons-popover direction="up" id="popover">
+		<div style="padding: 5px; text-align: center;">
+			<label for="comment">Comentario</label>
+			<ons-input id="new_comment" input-id="comment"></ons-input>
+			
+			<ons-button modifier="material--flat" onclick="saveComment()">Ok</ons-button>
+			<ons-button modifier="material--flat" onclick="hidePopover()">Cerrar</ons-button>
+			<ons-progress-circular indeterminate id="cargando" style="visibility:hidden;"></ons-progress-circular>
+		</div>
+	</ons-popover>
+	
+</body>
+</html>

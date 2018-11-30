@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iniciar Sesión | Xomoli</title>
+	<script>
+		var compruebaSesion = function(){
+			if (localStorage.getItem("Sesion") != null){
+				location.href ="inicio.html";
+			}
+		}
+		compruebaSesion();
+	</script>
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+	<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<script>
+		var login = function(){
+			document.getElementById('cargando').style.visibility='visible';
+			var username = document.getElementById('username').value;
+			var password = document.getElementById('password').value;
+			var params = "solicitud=Login&usuario="+username+"&password="+password;
+			var url = "http://xomoliapplication.000webhostapp.com/aplicacion.php";
+
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState === 4 && this.status === 200){
+					document.getElementById('cargando').style.visibility='hidden';
+					if(this.responseText=="0"){
+						document.getElementById('error-dialog').show();
+						}
+					else{
+						localStorage.setItem("Sesion",this.responseText);
+						location.href ="inicio.html";
+						}
+					}
+				};
+			xmlhttp.open("POST",url,true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.send(params);	
+		};
+
+		var continuar = function(){
+				document.getElementById('error-dialog').hide();
+		}
+		var mostrarRegistrar = function(){
+				document.getElementById('registrar').style.display='block';
+		}
+		var ocultarRegistrar = function(){
+				document.getElementById('registrar').style.display='none';
+		}
+		
+	</script>
+	
+</head>
+<body>
+	<ons-page align="center">
+		<ons-toolbar>
+			<div class="center">Xomoli App</div>
+		</ons-toolbar>
+		<img src="recursos/xomoli_logo.png" width="90px" style="margin-top:20px">
+		<h2>Iniciar Sesión</h2>
+		<p>Ingresa tus datos para ingresar</p>
+		<p><ons-input id="username" modifier="underbar" placeholder="Correo o Usuario" float onfocus="ocultarRegistrar()" onblur="mostrarRegistrar()"></ons-input></p>
+		<p><ons-input id="password" modifier="underbar" type="password" placeholder="Contraseña" float onfocus="ocultarRegistrar()" onblur="mostrarRegistrar()" ></ons-input></p>
+		<p><ons-button onclick="login()" onfocus="ocultarRegistrar()" onblur="mostrarRegistrar()">Iniciar Sesión</ons-button></p>
+		<p><ons-progress-circular indeterminate id="cargando" style="visibility:hidden;"></ons-progress-circular></p>
+		<br>
+
+		<ons-bottom-toolbar id="registrar" modifier="transparent" style="height:100px">
+			<p>¿No estás registrado? <br>
+			<ons-button modifier="quiet" onclick="registro()" position="bottom">Crear una nueva cuenta</ons-button></p>
+		</ons-bottom-toolbar>
+
+	</ons-page>
+</body>
+<ons-alert-dialog id="error-dialog">
+	<div class="alert-dialog-title">Error al iniciar sesión</div>
+	<div class="alert-dialog-content">
+		Verifique sus datos y vuelva a intentarlo.
+	</div>
+	<div class="alert-dialog-footer">
+		<ons-alert-dialog-button onclick="continuar()">Aceptar</ons-alert-dialog-button>
+	</div>
+</ons-alert-dialog>
+
+<script>
+	function registro(){
+		location.href ="registro.html";
+	}
+</script>
+</html>
